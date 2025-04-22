@@ -190,8 +190,8 @@ function FIT_AltGearManager.utils.QueueJewelryUpgrades(BAG, slotId)
     for k , v in pairs(slots) do
       local currentTrait = GetItemTrait(BAG_WORN, k)
       local currentItemRequiredLevel = GetItemRequiredLevel(BAG_WORN, k)
-      if ItemEquipmentFilterType == v and ItemRequiredLevel > currentItemRequiredLevel then
-        if itemTrait == trait then
+      if ItemEquipmentFilterType == v and ItemRequiredLevel >= currentItemRequiredLevel then
+        if itemTrait == trait and currentTrait ~= trait then
           result = true
           if FIT_AltGearManager.Queue[k] then
             if ItemRequiredLevel > GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) then
