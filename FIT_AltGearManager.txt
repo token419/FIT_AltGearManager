@@ -1,0 +1,7 @@
+## Title: FIT Alt Gear Manager
+## APIVersion: 101045  
+## Author: |c32CD32@token419|r  
+## Description: Manages all the things you aquire for alts or fresh accounts!
+
+FIT_AltGearManager.lua
+FIT_AltGearManagerInit.lua
