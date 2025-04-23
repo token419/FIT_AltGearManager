@@ -2,27 +2,23 @@
 
 **WARNING**: This addon will auto bind items to you when it equips them, if you care about that, this may not be for you.
 
-This addon helps manage gear for alts or new characters under CP160 still. The addon itself won't actually do anything when it starts up if:
+This addon helps manage gear for alts or new characters whose gear is under CP160 still. The addon itself won't actually do anything when it starts up if:
 
 1. The character is above CP160
 2. All worn items are CP160
 
-The focus is to stop worrying about gear so you can just play the game. 
-
-There is no setup, simply equip your preferred armor, weapons, and jewelry and the addon will auto monitor and upgrade them for you. When all of your gear equipped is CP160 the addon will automatically unregister itself.
+The focus is to stop worrying about gear so you can just play the game. There is no setup, simply equip your preferred armor, weapons, and jewelry and the addon will auto monitor and upgrade them for you. When all of your gear equipped is CP160 the addon will automatically unregister itself.
 
 The addon will register 1 command if active: `/fit`. This command will scan your backpack and auto equip any items considered upgrades. This can be handy when loading for the first time on a character that may have potential upgrades in their inventory.
 - Note: This command, along with all logic in the addon, will not register if the character's currently equipped inventory is all above CP160.
 
-**Weapon handling** is currently done by categories. The cateogires are:
-- Destruction Staff (Fire, Lightening, Ice)
-- 2 Handed (Axe, Sword, Mace)
-- 1 Handed (Axe, Sword, Mace, Dagger, Shield)
+**Weapon handling** is currently done by categories, if weapon specific passives are not purchased. The cateogires are:
+- Destruction Staff (Fire, Lightening, Ice) **Note:** Purchasing the passive `Tri Focus` will override this, retaining your equiped specific weapon type.
+- 2 Handed (Axe, Sword, Mace) **Note:** Purchasing the passive `Heavy Weapons` will override this, retaining your equiped specific weapon type.
+- 1 Handed (Axe, Sword, Mace, Dagger, Shield) **Note:** Purchasing the passive `Twin Blade and Blunt` will override this, retaining your equiped specific weapon type.
 
-if the weapon is of the same category it will upgrade that category, not the individual weapon type.
-- i.e. if a 1h sword is in hand, and a dagger dropped and is considered better, the dagger will be used.
-
-I would like to implement a check in the future to override this, if the player has the abilities unlocked that modify weapon behavior based on specific type.
+if the weapon is of the same category it will upgrade that category, not the individual weapon type unless the corresponding passive for that weapon type is purchased.
+- i.e. if a 1h sword is currently equipped, and a dagger dropped and is considered better, the dagger will be used, unless `Twin Blade and Blunt` is purchased, in which case, the sword would still be used until a better sword drops.
 
 The weapon logic itself checks:
 
