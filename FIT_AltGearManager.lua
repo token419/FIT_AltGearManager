@@ -107,15 +107,17 @@ function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
       local currentItemEquipmentFilterType = GetItemEquipmentFilterType(BAG_WORN, k)
 
       if ItemEquipmentFilterType == currentItemEquipmentFilterType and ItemEquipType == v and ComputedLevel > currentComputedLevel then
-        if currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_ONE_HANDED and FIT_AltGearManager.vars.TwinBladeAndBlunt == true then -- Duel Wield: Twin Blade and Blunt
+        if currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_ONE_HANDED and FIT_AltGearManager.vars.TwinBladeAndBlunt == true and (k == 4 or k == 20) then -- Duel Wield: Twin Blade and Blunt
+          if GetItemWeaponType(BAG_WORN, (k + 1)) ~= WEAPONTYPE_SHIELD and GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
+            shouldQueue = true
+          elseif GetItemWeaponType(BAG_WORN, (k + 1)) == WEAPONTYPE_SHIELD then
+            shouldQueue = true
+          end
+        elseif currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_TWO_HANDED and FIT_AltGearManager.vars.HeavyWeapons == true then -- Two Handed: Heavy Weapons
           if GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
             shouldQueue = true
           end
-        elseif currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_TWO_HANDED and FIT_AltGearManager.vars.HeavyWeapons == true and GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then -- Two Handed: Heavy Weapons
-          if GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
-            shouldQueue = true
-          end
-        elseif currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_DESTRO_STAFF and FIT_AltGearManager.vars.TriFocus == true and GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then -- Handle Destruction Staff: Tri Focus
+        elseif currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_DESTRO_STAFF and FIT_AltGearManager.vars.TriFocus == true then -- Handle Destruction Staff: Tri Focus
           if GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
             shouldQueue = true
           end
