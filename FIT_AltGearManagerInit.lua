@@ -21,6 +21,7 @@ local function onSingleSlotUpdate(eventCode, bagId, slotId, isNewItem, ItemUISou
         EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_LEVELUP", EVENT_LEVEL_UPDATE)
         EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_COMBAT_EVENT", EVENT_PLAYER_COMBAT_STATE)
         EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_LOOT", EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
+        EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_SKILL_UPDATE", EVENT_SKILL_POINTS_CHANGED)
     end
 
     -- d(slotId.." "..GetItemLink(bagId, slotId).." (onSingleSlotUpdate BAG_WORN)")
@@ -49,6 +50,12 @@ local function handleCombat(eventCode, inCombat)
   end
 end -- End handleCombat
 
+
+-- EVENT_SKILL_POINTS_CHANGED (number eventCode, number pointsBefore, number pointsNow, number partialPointsBefore, number partialPointsNow)
+local function handleSkillUpdate(eventCode, pointsBefore, pointsNow, partialPointsBefore, partialPointsNow)
+  FIT_AltGearManager.utils.UpdateSkills()
+end -- End handleSkillUpdate
+
 local function initialize(eventCode, name)
   if name ~= FIT_AltGearManager.namespaceId then return end
   -- Stop checking for addons once we're loaded
@@ -61,11 +68,13 @@ local function initialize(eventCode, name)
   -- Only Enable if the character is lower than 50 or they are lower than CP160
   if FIT_AltGearManager.vars.Level < 50 or FIT_AltGearManager.vars.CP <= 160 or FIT_AltGearManager.utils.CP160ParseInventory() then
     FIT_AltGearManager.utils.UpdateAttributes()
+    FIT_AltGearManager.utils.UpdateSkills()
     -- Documentation at https://wiki.esoui.com/Events
     EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId .. "_ATTRIBUTES", EVENT_ATTRIBUTE_UPGRADE_UPDATED, handleAttributes)
     EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId .. "_LEVELUP", EVENT_LEVEL_UPDATE, handleLevelUp)
     EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId .. "_COMBAT_EVENT", EVENT_PLAYER_COMBAT_STATE, handleCombat)
     EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId .. "_LOOT", EVENT_INVENTORY_SINGLE_SLOT_UPDATE, onSingleSlotUpdate)
+    EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId .. "_SKILL_UPDATE", EVENT_SKILL_POINTS_CHANGED, handleSkillUpdate)
     SLASH_COMMANDS["/fit"] = FIT_AltGearManager.utils.ParseInventory
 
   end

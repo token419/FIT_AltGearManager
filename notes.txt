@@ -192,3 +192,57 @@ https://wiki.esoui.com/Globals#SpecializedItemType
 ITEMTYPE_ARMOR
 ITEMTYPE_WEAPON
 SPECIALIZED_ITEMTYPE_ARMOR
+
+Search on ESOUI Source Code 
+Heavy Weapons
+/script d(GetAbilityProgressionXPInfoFromAbilityId(45430))
+Ancient Knowledge
+30959
+/script d(GetAbilityProgressionXPInfoFromAbilityId(30959))
+/script d(GetAbilityProgressionXPInfoFromAbilityId(45513))
+
+/script d(GetAbilityName(45430))
+
+
+
+
+
+
+/script d(GetSpecificSkillAbilityKeysByAbilityId())
+
+
+/script d(GetSpecificSkillAbilityKeysByAbilityId())
+/script d(GetSpecificSkillAbilityKeysByAbilityId(45513))
+
+Two Handed
+Heavy Weapons - 45430
+
+Destruction Staff
+Tri-Focus - 30948
+
+Duel-Wield
+Twin Blade and Blunt - 30893
+
+/script d(IsAbilityPassive(45430))
+/script d(IsAbilityPassive(45513))
+
+
+Search on ESOUI Source Code GetAbilityProgressionXPInfoFromAbilityId(integer abilityId)
+/script d(GetAbilityProgressionXPInfoFromAbilityId(30959))
+Returns: integer:nilable rank
+
+
+ /script d(IsSkillAbilityPurchased(30959))
+
+ /script skillType, skillLineIndex, skillIndex, morphChoice, rank = GetSpecificSkillAbilityKeysByAbilityId(30948) d(IsSkillAbilityPurchased(skillType, skillLineIndex, skillIndex))
+
+Search on ESOUI Source Code GetSpecificSkillAbilityKeysByAbilityId(integer abilityId)
+Returns: SkillType skillType, luaindex skillLineIndex, luaindex skillIndex, integer morphChoice, integer rank
+
+  IsSkillAbilityPurchased(SkillType skillType, luaindex skillLineIndex, luaindex skillIndex)
+Returns: bool isPurchased
+
+
+EVENT_SKILL_RANK_UPDATE (number eventCode, SkillType skillType, number skillIndex, number rank)
+
+EVENT_SKILL_POINTS_CHANGED (number eventCode, number pointsBefore, number pointsNow, number partialPointsBefore, number partialPointsNow)

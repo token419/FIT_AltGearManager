@@ -20,6 +20,9 @@ FIT_AltGearManager.vars.Back2Type = EQUIPMENT_FILTER_TYPE_NONE
 FIT_AltGearManager.vars.PrimaryStat = ATTRIBUTE_NONE
 FIT_AltGearManager.vars.PrimaryArmorEnchant = 0
 FIT_AltGearManager.vars.PrimaryJewelryTrait = 0
+FIT_AltGearManager.vars.HeavyWeapons = false
+FIT_AltGearManager.vars.TriFocus = false
+FIT_AltGearManager.vars.TwinBladeAndBlunt = false
 FIT_AltGearManager.utils = {} -- Container for functions
 
 local function handleCombatQueue(eventCode, inCombat)
@@ -28,6 +31,15 @@ local function handleCombatQueue(eventCode, inCombat)
     FIT_AltGearManager.utils.TransferQueue()
   end
 end -- End handleCombatQueue
+
+function FIT_AltGearManager.utils.UpdateSkills()
+  local hwskillType, hwskillLineIndex, hwskillIndex, _, _ = GetSpecificSkillAbilityKeysByAbilityId(29375) -- Two Handed: Heavy Weapons
+  local tfskillType, tfskillLineIndex, tfskillIndex, _, _ = GetSpecificSkillAbilityKeysByAbilityId(30948) -- Destruction Staff: Tri-Focus
+  local tbabskillType, tbabskillLineIndex, tbabskillIndex, _, _ = GetSpecificSkillAbilityKeysByAbilityId(30893) -- Duel-Wield: Twin Blade and Blunt
+  FIT_AltGearManager.vars.HeavyWeapons = IsSkillAbilityPurchased(hwskillType, hwskillLineIndex, hwskillIndex)
+  FIT_AltGearManager.vars.TriFocus = IsSkillAbilityPurchased(tfskillType, tfskillLineIndex, tfskillIndex)
+  FIT_AltGearManager.vars.TwinBladeAndBlunt = IsSkillAbilityPurchased(tbabskillType, tbabskillLineIndex, tbabskillIndex)
+end -- End FIT_AltGearManager.utils.UpdateSkills
 
 function FIT_AltGearManager.utils.TransferQueue()
   local success = false
@@ -92,9 +104,24 @@ function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
       local currentItemRequiredLevel = GetItemRequiredLevel(BAG_WORN, k)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
       local currentComputedLevel = currentItemRequiredLevel + currentItemDisplayQuality
+      local currentItemEquipmentFilterType = GetItemEquipmentFilterType(BAG_WORN, k)
 
-      if ItemEquipmentFilterType == GetItemEquipmentFilterType(BAG_WORN, k) and ItemEquipType == v and ComputedLevel > currentComputedLevel then
-        shouldQueue = true
+      if ItemEquipmentFilterType == currentItemEquipmentFilterType and ItemEquipType == v and ComputedLevel > currentComputedLevel then
+        if currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_ONE_HANDED and FIT_AltGearManager.vars.TwinBladeAndBlunt == true then -- Duel Wield: Twin Blade and Blunt
+          if GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
+            shouldQueue = true
+          end
+        elseif currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_TWO_HANDED and FIT_AltGearManager.vars.HeavyWeapons == true and GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then -- Two Handed: Heavy Weapons
+          if GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
+            shouldQueue = true
+          end
+        elseif currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_DESTRO_STAFF and FIT_AltGearManager.vars.TriFocus == true and GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then -- Handle Destruction Staff: Tri Focus
+          if GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
+            shouldQueue = true
+          end
+        else
+          shouldQueue = true
+        end
       end
 
       if shouldQueue == true then
