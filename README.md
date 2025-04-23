@@ -11,6 +11,9 @@ The focus is to stop worrying about gear so you can just play the game.
 
 There is no setup, simply equip your preferred armor, weapons, and jewelry and the addon will auto monitor and upgrade them for you. When all of your gear equipped is CP160 the addon will automatically unregister itself.
 
+The addon will register 1 command if active: `/fit`. This command will scan your backpack and auto equip any items considered upgrades. This can be handy when loading for the first time on a character that may have potential upgrades in their inventory.
+- Note: This command, along with all logic in the addon, will not register if the character's currently equipped inventory is all above CP160.
+
 **Weapon handling** is currently done by categories. The cateogires are:
 - Destruction Staff (Fire, Lightening, Ice)
 - 2 Handed (Axe, Sword, Mace)
