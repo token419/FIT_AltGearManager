@@ -27,7 +27,7 @@ local function handleCombatQueue(eventCode, inCombat)
     EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_COMBAT_QUEUE", EVENT_PLAYER_COMBAT_STATE)
     FIT_AltGearManager.utils.TransferQueue()
   end
-end
+end -- End handleCombatQueue
 
 function FIT_AltGearManager.utils.TransferQueue()
   local success = false
@@ -59,10 +59,10 @@ function FIT_AltGearManager.utils.TransferQueue()
         -- d(v.slotId.." Equipped: "..v.itemLink)
         -- d("Equipped: "..v.itemLink)
       end
-    end
-  end
+    end -- End if statement
+  end -- End For loop
 
-end
+end -- End handleCombatQueue
 
 function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
   local result = false
@@ -87,7 +87,7 @@ function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
     -- Do Nothing for Items we cannot use yet
     -- d("Not High Enough: "..itemLink)
   elseif ItemFilterTypeInfo == ITEMFILTERTYPE_WEAPONS then
-    for k , _ in pairs(slots) do
+    for k, _ in pairs(slots) do
       local shouldQueue = false
       local currentItemRequiredLevel = GetItemRequiredLevel(BAG_WORN, k)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
@@ -127,7 +127,7 @@ function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
 
   return result
 
-end
+end -- End FIT_AltGearManager.utils.QueueWeaponUpgrades
 
 -- /script d(FIT_AltGearManager.utils.QueueArmorUpgrades(BAG_BACKPACK, 16))
 function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
@@ -164,23 +164,23 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
       local currentComputedLevel = currentItemRequiredLevel + currentItemDisplayQuality
 
+      -- Get Enchantments, Sometimes GetItemLinkDefaultEnchantId does not return a value, so we do a secondary call to GetItemLinkAppliedEnchantId and overwrite if that happens
       local CurrentItemEnchant = GetItemLinkDefaultEnchantId(GetItemLink(BAG_WORN, k))
       if CurrentItemEnchant == 0 then
         CurrentItemEnchant = GetItemLinkAppliedEnchantId(GetItemLink(BAG_WORN, k))
       end
 
+      -- Get Enchantments, Sometimes GetItemLinkDefaultEnchantId does not return a value, so we do a secondary call to GetItemLinkAppliedEnchantId and overwrite if that happens
       local ItemEnchant = GetItemLinkDefaultEnchantId(itemLink)
       if ItemEnchant == 0 then
         ItemEnchant = GetItemLinkAppliedEnchantId(itemLink)
       end
 
-
-
+      -- If the item matches the slot.... well then...
       if ItemEquipmentFilterType == GetItemEquipmentFilterType(BAG_WORN, k) and ItemEquipType == v then
         if ComputedLevel > currentComputedLevel then
           shouldQueue = true
         elseif ComputedLevel == currentComputedLevel then
-
 
           if CurrentItemEnchant ~= FIT_AltGearManager.vars.PrimaryArmorEnchant and ItemEnchant == FIT_AltGearManager.vars.PrimaryArmorEnchant then
             -- d("Upgraded Becasue Enchant was better "..itemLink)
@@ -193,28 +193,6 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
       end
 
       if shouldQueue == true then
-
-
-
-        -- local ItemEnchant = GetItemLinkDefaultEnchantId(itemLink)
-        -- if ItemEnchant == 0 then
-        --   local pre = ItemEnchant
-        --   ItemEnchant = GetItemLinkAppliedEnchantId(itemLink)
-        --   if ItemEnchant == pre then
-        --     d("No Enchant Data.")
-        --   elseif ItemEnchant ~= pre then
-        --     d("Using Applied Enchant Data")
-        --   end
-        -- else
-        --   d("Using Default Enchant Data")
-        -- end
-
-        -- if ItemEnchant == FIT_AltGearManager.vars.PrimaryArmorEnchant then
-        --   d("Power Enchant Match!")
-        -- end
-
-
-
         result = true
         if FIT_AltGearManager.Queue[k] then
           if ComputedLevel > (GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) + GetItemDisplayQuality(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId)) then
@@ -230,8 +208,8 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
         end
       end
 
-    end
-  end
+    end -- End for loop
+  end -- End if statement
 
   if result == true then
     FIT_AltGearManager.utils.TransferQueue()
@@ -239,7 +217,7 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
 
   return result
 
-end
+end -- End FIT_AltGearManager.utils.QueueArmorUpgrades
 
 function FIT_AltGearManager.utils.QueueJewelryUpgrades(SourceBag, slotId)
   local result = false
@@ -307,7 +285,7 @@ function FIT_AltGearManager.utils.QueueJewelryUpgrades(SourceBag, slotId)
 
   return result
 
-end
+end -- End FIT_AltGearManager.utils.QueueJewelryUpgrades
 
 function FIT_AltGearManager.utils.ParseInventory()
   local result = nil
@@ -322,7 +300,49 @@ function FIT_AltGearManager.utils.ParseInventory()
 
   if result then FIT_AltGearManager.utils.TransferQueue() end
 
-end
+end -- End FIT_AltGearManager.utils.ParseInventory
+
+-- Returns True if the character has non CP160 items still
+function FIT_AltGearManager.utils.CP160ParseInventory()
+  local slots = {}
+  slots[0] = true -- Head
+  slots[1] = true -- Neck
+  slots[2] = true -- Chest
+  slots[3] = true -- Shoulders
+  slots[4] = true -- MainWeapon1
+  -- slots[5] = true -- MainWeapon2
+  slots[6] = true -- Waist
+  slots[8] = true -- Legs
+  slots[9] = true -- Feet
+  slots[11] = true -- Ring1
+  slots[12] = true -- Ring2
+  slots[16] = true -- Hands
+  slots[20] = true -- BackWeapon1
+  -- slots[21] = true -- BackWeapon2
+
+  for k , v in pairs(slots) do
+    if GetItemRequiredChampionPoints(BAG_WORN, k) ~= 160 then
+      return true
+    end
+	end
+  -- Check if Duel Wielding on Main weapon bar
+  local main1 = GetItemEquipmentFilterType(BAG_WORN, 4)
+  if main1 == EQUIPMENT_FILTER_TYPE_ONE_HANDED or main1 == EQUIPMENT_FILTER_TYPE_SHIELD then
+    if GetItemRequiredChampionPoints(BAG_WORN, 5) ~= 160 then
+      return true
+    end
+  end
+  -- Check if Duel Wielding on Back weapon bar
+  local back1 = GetItemEquipmentFilterType(BAG_WORN, 20)
+  if back1 == EQUIPMENT_FILTER_TYPE_ONE_HANDED or back1 == EQUIPMENT_FILTER_TYPE_SHIELD then
+    if GetItemRequiredChampionPoints(BAG_WORN, 21) ~= 160 then
+      return true
+    end
+  end
+
+  return false
+
+end -- End FIT_AltGearManager.utils.CP160ParseInventory
 
 function FIT_AltGearManager.utils.UpdateAttributes()
   local function calculatePrimaryStat()
@@ -337,7 +357,7 @@ function FIT_AltGearManager.utils.UpdateAttributes()
 
     return PrimaryStat
 
-  end
+  end -- End calculatePrimaryStat
 
   local function calculatePrimaryJewelryTrait()
     local PrimaryJewelryTrait = ITEM_TRAIT_TYPE_NONE
@@ -351,7 +371,7 @@ function FIT_AltGearManager.utils.UpdateAttributes()
 
     return PrimaryJewelryTrait
 
-  end
+  end -- End calculatePrimaryJewelryTrait
 
   local function calculatePrimaryArmorEnchant()
     local PrimaryArmorEnchant = 0
@@ -365,7 +385,7 @@ function FIT_AltGearManager.utils.UpdateAttributes()
 
     return PrimaryArmorEnchant
 
-  end
+  end -- End calculatePrimaryArmorEnchant
 
   FIT_AltGearManager.vars.Stamina = GetAttributeSpentPoints(ATTRIBUTE_STAMINA)
   FIT_AltGearManager.vars.Magicka = GetAttributeSpentPoints(ATTRIBUTE_MAGICKA)
@@ -374,4 +394,4 @@ function FIT_AltGearManager.utils.UpdateAttributes()
   FIT_AltGearManager.vars.PrimaryArmorEnchant = calculatePrimaryArmorEnchant()
   FIT_AltGearManager.vars.PrimaryJewelryTrait = calculatePrimaryJewelryTrait()
 
-end
+end -- End FIT_AltGearManager.utils.UpdateAttributes

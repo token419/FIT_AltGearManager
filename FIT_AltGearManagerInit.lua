@@ -11,23 +11,35 @@ local function onSingleSlotUpdate(eventCode, bagId, slotId, isNewItem, ItemUISou
 
     -- d(slotId.." "..GetItemLink(bagId, slotId).." (onSingleSlotUpdate)")
   elseif bagId == BAG_WORN then
-    -- Don't do anything if the player manually adjusted their inventory
+    -- Don't do anything if the player manually adjusted their inventory. Initiating a move event from here can cause infinate loops.
+
+    -- Only Parse their BAG_WORN if they are above CP160, if all items are above CP160 then unregister
+    if FIT_AltGearManager.vars.CP >= 160 and FIT_AltGearManager.utils.CP160ParseInventory() == false then
+        -- d("Unregister")
+        SLASH_COMMANDS["/fit"] = nil
+        EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_ATTRIBUTES", EVENT_ATTRIBUTE_UPGRADE_UPDATED)
+        EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_LEVELUP", EVENT_LEVEL_UPDATE)
+        EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_COMBAT_EVENT", EVENT_PLAYER_COMBAT_STATE)
+        EVENT_MANAGER:UnregisterForEvent(FIT_AltGearManager.namespaceId .. "_LOOT", EVENT_INVENTORY_SINGLE_SLOT_UPDATE)
+    end
+
     -- d(slotId.." "..GetItemLink(bagId, slotId).." (onSingleSlotUpdate BAG_WORN)")
+
   end
 
   if result then FIT_AltGearManager.utils.TransferQueue() end
 
-end
+end -- End onSingleSlotUpdate
 
 local function handleLevelUp(eventCode)
   FIT_AltGearManager.vars.Level = GetUnitLevel("player")
   FIT_AltGearManager.vars.CP = GetUnitEffectiveChampionPoints("player")
   FIT_AltGearManager.utils.ParseInventory()
-end
+end -- End handleLevelUp
 
 local function handleAttributes(eventCode)
   FIT_AltGearManager.utils.UpdateAttributes()
-end
+end -- End handleAttributes
 
 local function handleCombat(eventCode, inCombat)
   if inCombat == true then
@@ -35,7 +47,7 @@ local function handleCombat(eventCode, inCombat)
   else
     FIT_AltGearManager.vars.inCombat = false
   end
-end
+end -- End handleCombat
 
 local function initialize(eventCode, name)
   if name ~= FIT_AltGearManager.namespaceId then return end
@@ -47,7 +59,7 @@ local function initialize(eventCode, name)
   FIT_AltGearManager.vars.CP = GetUnitEffectiveChampionPoints("player")
 
   -- Only Enable if the character is lower than 50 or they are lower than CP160
-  if FIT_AltGearManager.vars.Level < 50 or FIT_AltGearManager.vars.CP <= 160 then
+  if FIT_AltGearManager.vars.Level < 50 or FIT_AltGearManager.vars.CP <= 160 or FIT_AltGearManager.utils.CP160ParseInventory() then
     FIT_AltGearManager.utils.UpdateAttributes()
     -- Documentation at https://wiki.esoui.com/Events
     EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId .. "_ATTRIBUTES", EVENT_ATTRIBUTE_UPGRADE_UPDATED, handleAttributes)
@@ -58,7 +70,7 @@ local function initialize(eventCode, name)
 
   end
 
-end
+end -- End initialize
 
 EVENT_MANAGER:RegisterForEvent(FIT_AltGearManager.namespaceId, EVENT_ADD_ON_LOADED, initialize )
 
