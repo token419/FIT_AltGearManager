@@ -20,14 +20,12 @@ local function onSingleSlotUpdate(eventCode, bagId, slotId, isNewItem, ItemUISou
 end
 
 local function handleLevelUp(eventCode)
-  d("handleLevelUp Event")
   FIT_AltGearManager.vars.Level = GetUnitLevel("player")
   FIT_AltGearManager.vars.CP = GetUnitEffectiveChampionPoints("player")
   FIT_AltGearManager.utils.ParseInventory()
 end
 
 local function handleAttributes(eventCode)
-  d("handleAttributes Event")
   FIT_AltGearManager.utils.UpdateAttributes()
 end
 

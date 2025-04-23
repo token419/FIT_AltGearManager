@@ -47,7 +47,7 @@ function FIT_AltGearManager.utils.TransferQueue()
           SHARED_INVENTORY.refresh:RefreshSingle("inventory", BAG_BACKPACK, v.slotId, true, ITEM_SOUND_CATEGORY_DEFAULT, INVENTORY_UPDATE_REASON_DEFAULT)
           SHARED_INVENTORY.refresh:RefreshSingle("inventory", BAG_WORN, k, true, ITEM_SOUND_CATEGORY_DEFAULT, INVENTORY_UPDATE_REASON_DEFAULT)
         else
-          d("Transfer Failed")
+          -- d("Transfer Failed")
         end
       else
         RequestMoveItem(BAG_BACKPACK, v.slotId, destBag, BAG_WORN, k, 1)
@@ -183,7 +183,7 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
 
 
           if CurrentItemEnchant ~= FIT_AltGearManager.vars.PrimaryArmorEnchant and ItemEnchant == FIT_AltGearManager.vars.PrimaryArmorEnchant then
-            d("Upgraded Becasue Enchant was better "..itemLink)
+            -- d("Upgraded Becasue Enchant was better "..itemLink)
             shouldQueue = true
           else
             -- d("Skipped Same ComputedLevel item "..itemLink)
