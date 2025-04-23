@@ -164,35 +164,60 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
       local currentComputedLevel = currentItemRequiredLevel + currentItemDisplayQuality
 
-      -- local ItemEnchant = GetItemLinkDefaultEnchantId(itemLink)
-      -- if ItemEnchant == 0 then
-      --   local pre = ItemEnchant
-      --   ItemEnchant = GetItemLinkAppliedEnchantId(itemLink)
-      --   if ItemEnchant == pre then
-      --     d("No Enchant Data.")
-      --   elseif ItemEnchant ~= pre then
-      --     d("Using Applied Enchant Data")
-      --   end
-      -- else
-      --   d("Using Default Enchant Data")
-      -- end
+      local CurrentItemEnchant = GetItemLinkDefaultEnchantId(GetItemLink(BAG_WORN, k))
+      if CurrentItemEnchant == 0 then
+        CurrentItemEnchant = GetItemLinkAppliedEnchantId(GetItemLink(BAG_WORN, k))
+      end
+
+      local ItemEnchant = GetItemLinkDefaultEnchantId(itemLink)
+      if ItemEnchant == 0 then
+        ItemEnchant = GetItemLinkAppliedEnchantId(itemLink)
+      end
+
+
 
       if ItemEquipmentFilterType == GetItemEquipmentFilterType(BAG_WORN, k) and ItemEquipType == v then
         if ComputedLevel > currentComputedLevel then
           shouldQueue = true
         elseif ComputedLevel == currentComputedLevel then
-          local ItemDefaultEnchant = GetItemLinkDefaultEnchantId(itemLink)
-          local ItemAppliedEnchantId = GetItemLinkAppliedEnchantId(itemLink)
-          -- d("Upgrade Enchant: "..itemLink.." ItemDefaultEnchant: "..ItemDefaultEnchant.." ItemAppliedEnchantId: "..ItemAppliedEnchantId)
+
+
+          if CurrentItemEnchant ~= FIT_AltGearManager.vars.PrimaryArmorEnchant and ItemEnchant == FIT_AltGearManager.vars.PrimaryArmorEnchant then
+            d("Upgraded Becasue Enchant was better "..itemLink)
+            shouldQueue = true
+          else
+            -- d("Skipped Same ComputedLevel item "..itemLink)
+          end
+
         end
       end
 
       if shouldQueue == true then
 
 
+
+        -- local ItemEnchant = GetItemLinkDefaultEnchantId(itemLink)
+        -- if ItemEnchant == 0 then
+        --   local pre = ItemEnchant
+        --   ItemEnchant = GetItemLinkAppliedEnchantId(itemLink)
+        --   if ItemEnchant == pre then
+        --     d("No Enchant Data.")
+        --   elseif ItemEnchant ~= pre then
+        --     d("Using Applied Enchant Data")
+        --   end
+        -- else
+        --   d("Using Default Enchant Data")
+        -- end
+
+        -- if ItemEnchant == FIT_AltGearManager.vars.PrimaryArmorEnchant then
+        --   d("Power Enchant Match!")
+        -- end
+
+
+
         result = true
         if FIT_AltGearManager.Queue[k] then
-          if ComputedLevel > (GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) + GetItemDisplayQuality(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId))  then
+          if ComputedLevel > (GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) + GetItemDisplayQuality(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId)) then
             FIT_AltGearManager.Queue[k].slotId = slotId
             FIT_AltGearManager.Queue[k].ComputedLevel = ComputedLevel
             FIT_AltGearManager.Queue[k].itemLink = itemLink
