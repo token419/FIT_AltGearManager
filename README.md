@@ -4,12 +4,6 @@ WARNING: This addon will auto bind items to you when it equips them, if you care
 
 This addon helps manage gear for alts or new characters under CP160 still. The addon itself won'tl actually do anything when it starts up if the character is above CP160. The focus is to stop worrying about gear so you can just play the game. 
 
-There is no setup, simply equip your preferred armor and weapons and the addon will auto monitor and upgrade them for you.
+There is no setup, simply equip your preferred armor, weapons, and jewelry and the addon will auto monitor and upgrade them for you.
 
-This addon will also upgrade your jewelery based on your attribute points spent. The idea here is that while leveling, you mostly only run across the traits Robust, Arcane, and Healthy, and the addons auto aligns out of those 3 based on your attribute points spent.
-More points into Stamina, it will pick the Robust trait
-More points into Magicka will pick the Arcane trait
-More points into Health will pick the Healthy trait
-If all 3 are equalI Robust will be chosen as priority.
-
-Things to keep note of. Currently this addon does not evaluate the quality of the item, purely the level and armor/weapon power. I would like to come up with a way to include quality in the comparison to make the upgrades even better.
+For Weapons, if the weapon is of the same category TYPE, i.e. Destruction Staff (Fire, Lightening, Ice), 2h (Axe, Sword, Mace), 1h (Axe, Sword, Mace, Dagger), it will upgrade that category, not the individual weapon type, i.e. if a 1h sword is in hand, and a dagger dropped and is better, the dagger will be used. I may implement a check in the future to override this if the abilities that modify weapon behavior based on type are unlocked.

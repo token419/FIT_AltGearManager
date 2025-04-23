@@ -8,6 +8,11 @@ local function onSingleSlotUpdate(eventCode, bagId, slotId, isNewItem, ItemUISou
     FIT_AltGearManager.utils.QueueWeaponUpgrades(BAG_BACKPACK, slotId)
     -- Queueu Jewelery Upgrades
     FIT_AltGearManager.utils.QueueJewelryUpgrades(BAG_BACKPACK, slotId)
+
+    -- d(slotId.." "..GetItemLink(bagId, slotId).." (onSingleSlotUpdate)")
+  elseif bagId == BAG_WORN then
+    -- Don't do anything if the player manually adjusted their inventory
+    -- d(slotId.." "..GetItemLink(bagId, slotId).." (onSingleSlotUpdate BAG_WORN)")
   end
 
   if result then FIT_AltGearManager.utils.TransferQueue() end
@@ -16,6 +21,8 @@ end
 
 local function handleLevelUp(eventCode)
   d("handleLevelUp Event")
+  FIT_AltGearManager.vars.Level = GetUnitLevel("player")
+  FIT_AltGearManager.vars.CP = GetUnitEffectiveChampionPoints("player")
   FIT_AltGearManager.utils.ParseInventory()
 end
 
