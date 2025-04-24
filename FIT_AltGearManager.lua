@@ -102,11 +102,12 @@ function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
     for k, _ in pairs(slots) do
       local shouldQueue = false
       local currentItemRequiredLevel = GetItemRequiredLevel(BAG_WORN, k)
+      local currentItemRequiredCP = GetItemRequiredChampionPoints(BAG_WORN, k)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
       local currentComputedLevel = currentItemRequiredLevel + currentItemDisplayQuality
       local currentItemEquipmentFilterType = GetItemEquipmentFilterType(BAG_WORN, k)
 
-      if ItemEquipmentFilterType == currentItemEquipmentFilterType and ItemEquipType == v and ComputedLevel > currentComputedLevel then
+      if ItemEquipmentFilterType == currentItemEquipmentFilterType and ItemEquipType == v and ComputedLevel > currentComputedLevel and currentItemRequiredCP ~= 160 then
         if currentItemEquipmentFilterType == EQUIPMENT_FILTER_TYPE_ONE_HANDED and FIT_AltGearManager.vars.TwinBladeAndBlunt == true and (k == 4 or k == 20) then -- Duel Wield: Twin Blade and Blunt
           if GetItemWeaponType(BAG_WORN, (k + 1)) ~= WEAPONTYPE_SHIELD and GetItemWeaponType(SourceBag, slotId) == GetItemWeaponType(BAG_WORN, k) then
             shouldQueue = true
@@ -129,7 +130,7 @@ function FIT_AltGearManager.utils.QueueWeaponUpgrades(SourceBag, slotId)
       if shouldQueue == true then
         result = true
         if FIT_AltGearManager.Queue[k] then
-          if ComputedLevel > (GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) + GetItemDisplayQuality(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId))  then
+          if ComputedLevel > FIT_AltGearManager.Queue[k].ComputedLevel and GetItemRequiredChampionPoints(SourceBag, FIT_AltGearManager.Queue[k].slotId) ~= 160 then
             FIT_AltGearManager.Queue[k].slotId = slotId
             FIT_AltGearManager.Queue[k].ComputedLevel = ComputedLevel
             FIT_AltGearManager.Queue[k].itemLink = itemLink
@@ -190,6 +191,7 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
     for k , v in pairs(slots) do
       local shouldQueue = false
       local currentItemRequiredLevel = GetItemRequiredLevel(BAG_WORN, k)
+      local currentItemRequiredCP = GetItemRequiredChampionPoints(BAG_WORN, k)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
       local currentComputedLevel = currentItemRequiredLevel + currentItemDisplayQuality
 
@@ -206,7 +208,7 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
       end
 
       -- If the item matches the slot.... well then...
-      if ItemEquipmentFilterType == GetItemEquipmentFilterType(BAG_WORN, k) and ItemEquipType == v then
+      if ItemEquipmentFilterType == GetItemEquipmentFilterType(BAG_WORN, k) and ItemEquipType == v and currentItemRequiredCP ~= 160 then
         if ComputedLevel > currentComputedLevel then
           shouldQueue = true
         elseif ComputedLevel == currentComputedLevel then
@@ -224,7 +226,7 @@ function FIT_AltGearManager.utils.QueueArmorUpgrades(SourceBag, slotId)
       if shouldQueue == true then
         result = true
         if FIT_AltGearManager.Queue[k] then
-          if ComputedLevel > (GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) + GetItemDisplayQuality(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId)) then
+          if ComputedLevel > FIT_AltGearManager.Queue[k].ComputedLevel and GetItemRequiredChampionPoints(SourceBag, FIT_AltGearManager.Queue[k].slotId) ~= 160 then
             FIT_AltGearManager.Queue[k].slotId = slotId
             FIT_AltGearManager.Queue[k].ComputedLevel = ComputedLevel
             FIT_AltGearManager.Queue[k].itemLink = itemLink
@@ -275,10 +277,11 @@ function FIT_AltGearManager.utils.QueueJewelryUpgrades(SourceBag, slotId)
       local shouldQueue = false
       local currentTrait = GetItemTrait(BAG_WORN, k)
       local currentItemRequiredLevel = GetItemRequiredLevel(BAG_WORN, k)
+      local currentItemRequiredCP = GetItemRequiredChampionPoints(BAG_WORN, k)
       local currentItemDisplayQuality = GetItemDisplayQuality(BAG_WORN, k)
       local currentComputedLevel = currentItemRequiredLevel + currentItemDisplayQuality
 
-      if ItemEquipmentFilterType == v and ComputedLevel > currentComputedLevel then
+      if ItemEquipmentFilterType == v and ComputedLevel > currentComputedLevel and currentItemRequiredCP ~= 160 then
         if itemTrait == currentTrait then
           shouldQueue = true
         end
@@ -287,7 +290,7 @@ function FIT_AltGearManager.utils.QueueJewelryUpgrades(SourceBag, slotId)
       if shouldQueue == true then
         result = true
         if FIT_AltGearManager.Queue[k] then
-          if ComputedLevel > (GetItemRequiredLevel(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId) + GetItemDisplayQuality(BAG_BACKPACK, FIT_AltGearManager.Queue[k].slotId))  then
+          if ComputedLevel > FIT_AltGearManager.Queue[k].ComputedLevel and GetItemRequiredChampionPoints(SourceBag, FIT_AltGearManager.Queue[k].slotId) ~= 160 then
             FIT_AltGearManager.Queue[k].slotId = slotId
             FIT_AltGearManager.Queue[k].ComputedLevel = ComputedLevel
             FIT_AltGearManager.Queue[k].itemLink = itemLink
